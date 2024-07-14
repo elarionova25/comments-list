@@ -10,7 +10,7 @@ const LikesCountWrap = styled.div`
         margin-right: 0;
         margin-left: auto;
         user-select: none;
-    `;
+`;
 
 interface ILikesCount {
     count: number;
@@ -41,9 +41,7 @@ const LikesCount: React.FC<ILikesCount> = ({ count, isInteractive, setCount, set
             <div onClick={ handleClick } style={ isInteractive ? { cursor: 'pointer' } : { cursor: 'default' } }>
                 <HeartIcon isInteractive={ isInteractive } isLiked={ isLiked }/>
             </div>
-            <span>
-                {count}
-            </span>
+            <span>{count}</span>
         </LikesCountWrap>
 )
 }

@@ -16,7 +16,7 @@ const MainContainer = styled.div`
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment:fixed;
-        padding: 52px 0 64px 0;
+        padding: 52px 24px 64px 24px;
         overflow: scroll;
     `
 
@@ -36,21 +36,20 @@ const CommentsContent = styled.div`
 function App() {
     const [ isLoading, setIsLoading ] = useState(false);
     const [ error, setError ] = useState('');
-
     const { authors } = useFetchAuthors(setIsLoading, setError);
     const [ totalLikesCount, setTotalLikes ] = useState(0);
     const { comments, pagination, currentPage, handleNextPage } = useFetchComments(setIsLoading, setError, error);
-
-    const handleLoadMore = () => {
-        handleNextPage();
-    }
 
     const commentsList = comments.map((item) => {
         return (<CommentItem key={ item.id } comment={ item } authors={ authors } replies={ item.children } setTotalLikes={ setTotalLikes }/>)
     })
 
+    const handleLoadMore = () => {
+        handleNextPage();
+    }
+
     useEffect(() => {
-        if (!comments) setTotalLikes(0);
+        if (!comments || !comments.length) setTotalLikes(0);
 
         const sum = (comments as IComment[]).reduce((accumulator: number, currentValue: IComment) => accumulator + currentValue.likes, 0);
         setTotalLikes(sum);
@@ -64,7 +63,7 @@ function App() {
                         <CommentsHeader totalComments={ pagination.size * pagination.total_pages } totalLikesCount={ totalLikesCount }/>
                         <CommentsContent>
                             { commentsList }
-                            { isLoading ? (<><Loading /><Loading /><Loading /></>) : null}
+                            { isLoading ? <Loading /> : null}
                             { error ? (<ErrorItem/>) : null}
                         </CommentsContent>
                         { currentPage < pagination.total_pages && !isLoading ? <LoadMoreBtn onClick={ handleLoadMore } isLoading={ isLoading }/> : null}

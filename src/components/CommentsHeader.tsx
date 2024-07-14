@@ -8,14 +8,14 @@ const HeaderBlock = styled.div`
         justify-content: space-between;
         padding-bottom: 8px;
         border-bottom: .2px solid #767676;
-    `;
+`;
 
 const CommentsCount = styled.div`
         color: #FFFFFF;
         font-weight: bold;
         text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
         filter: drop-shadow(0 3px 3px black);
-    `;
+`;
 
 interface ICommentsHeader {
     totalLikesCount: number

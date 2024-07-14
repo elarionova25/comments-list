@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components'
 import { IAuthor, IComment } from '../interfaces';
 import LikesCount from './LikesCount';
 import { DateHelper } from '../helpers/DateHelper';
-import defaultAvatar from 'src/assets/avatars/defaultAvatarStub.png';
+import Avatar from './icons/Avatar';
+import { useCommentAuthor } from '../hooks/useCommentAuthor';
 
 const CommentWrap = styled.div`
     width: 100%;
@@ -12,17 +13,6 @@ const CommentWrap = styled.div`
 const InfoWrap = styled.div`
     display: flex;
     width: 100%;
-`
-
-const Avatar = styled.div<{ $src?: string;}>`
-    border-radius: 50%;
-    height: 58px;
-    width: 58px;
-    margin-right: 20px;
-    background-size: cover;
-    background-position: unset;
-    background-repeat: no-repeat;
-    background-image: ${ (props) => `url(${ props.$src })` };
 `
 
 const MainInfo = styled.div`
@@ -35,6 +25,7 @@ const CommentText = styled.div`
     margin-left: 78px;
     font-size: 16px;
     color: #FFFF;
+    word-wrap: break-word
 `
 
 const TextName = styled.span`
@@ -60,33 +51,28 @@ interface ICommentItem {
     comment: IComment;
     replies: IComment[];
     authors: IAuthor[];
-    updateTotalLikesCount?: any;
-    setTotalLikes?: any;
+    setTotalLikes?: Dispatch<SetStateAction<number>>;
 }
+
 const CommentItem: React.FC<ICommentItem>  = ({ comment, authors, replies, setTotalLikes }) => {
     const [ count, setCount ] = useState(comment.likes);
+    const author = useCommentAuthor(comment.author, authors);
     const $DateHelper = new DateHelper(comment.created);
 
-    const getCommentAuthor = useCallback((authorId: number) => {
-        const author = authors.filter(item => authorId === item.id)[ 0 ];
-
-        if (!author) {
-            return {
-                id: 0,
-                name: 'Anonymous',
-                avatar: defaultAvatar,
-            }
-        }
-
-        return author;
-    }, [ authors ]);
+    const replyItems = replies?.map(item => {
+        return (
+            <RepliesWrap key={ item.id } $isFirst={ !comment.parent }>
+                <CommentItem comment={ item } replies={ item.children } authors={ authors } setTotalLikes={ setTotalLikes }/>
+            </RepliesWrap>
+        )
+    })
 
     return (
         <CommentWrap>
             <InfoWrap>
-                <Avatar $src={ getCommentAuthor(comment.author).avatar }/>
+                <Avatar avatarSrc={ author.avatar }></Avatar>
                 <MainInfo>
-                    <TextName>{getCommentAuthor(comment.author).name}</TextName>
+                    <TextName>{author.name}</TextName>
                     <TextTime>{ $DateHelper.date }</TextTime>
                 </MainInfo>
                 <LikesCount count={ count } isInteractive={ true } setCount={ setCount } setTotalLikes={ setTotalLikes }/>
@@ -94,7 +80,7 @@ const CommentItem: React.FC<ICommentItem>  = ({ comment, authors, replies, setTo
             <CommentText>
                 {comment.text}
             </CommentText>
-            { replies ? replies.map(item =>(<RepliesWrap key={ item.id } $isFirst={ !comment.parent }><CommentItem comment={ item } replies={ item.children } authors={ authors } setTotalLikes={ setTotalLikes }/></RepliesWrap>)) : null }
+            { replies ? replyItems : null }
         </CommentWrap>
     )
 }

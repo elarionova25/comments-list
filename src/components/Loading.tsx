@@ -37,9 +37,9 @@ const Loader = styled.div`
 
 const Loading = () => {
     return (
-        <Container>
-            <Loader />
-        </Container>
+        <>
+            { [ 1, 2, 3 ].map((el) => <Container key={ el }><Loader /></Container>)}
+        </>
     );
 }
 

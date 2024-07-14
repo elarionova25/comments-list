@@ -4,7 +4,7 @@ import { ActiveHeartIcon, DefaultHeartIcon, DisabledHeartIcon } from '../../asse
 
 const Icon = styled.div`
         height: 100%;
-    `;
+`;
 
 interface IHeartIcon {
     isInteractive: boolean;
