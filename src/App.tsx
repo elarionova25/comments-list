@@ -18,12 +18,12 @@ const MainContainer = styled.div`
         background-attachment:fixed;
         padding: 52px 24px 64px 24px;
         overflow: scroll;
-    `
+`
 
 const CommentsBlock = styled.div`
     max-width: 562px;
     margin: 0 auto;
-    `
+`
 
 const CommentsContent = styled.div`
     display: flex;

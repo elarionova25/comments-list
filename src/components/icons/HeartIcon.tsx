@@ -10,6 +10,7 @@ interface IHeartIcon {
     isInteractive: boolean;
     isLiked: boolean;
 }
+
 const HeartIcon: React.FC<IHeartIcon> = ({ isInteractive, isLiked }) => {
     if (!isInteractive) {
         return (

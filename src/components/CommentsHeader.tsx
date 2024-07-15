@@ -21,6 +21,7 @@ interface ICommentsHeader {
     totalLikesCount: number
     totalComments: number;
 }
+
 const CommentsHeader: React.FC<ICommentsHeader> = ({ totalComments, totalLikesCount }) => {
     return (
         <>
